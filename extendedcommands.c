@@ -344,7 +344,7 @@ void show_mount_usb_storage_menu()
 {
     int fd;
     Volume *vol = volume_for_path("/sdcard");
-    if ((fd = open("/sys/devices/platform/usb_mass_storage/lun0/file",
+    if ((fd = open("/sys/devices/platform/msm_hsusb/gadget/lun0/file",
                    O_WRONLY)) < 0) {
         LOGE("Unable to open ums lunfile (%s)", strerror(errno));
         return -1;
@@ -372,7 +372,7 @@ void show_mount_usb_storage_menu()
             break;
     }
 
-    if ((fd = open("/sys/devices/platform/usb_mass_storage/lun0/file", O_WRONLY)) < 0) {
+    if ((fd = open("/sys/devices/platform/msm_hsusb/gadget/lun0/file", O_WRONLY)) < 0) {
         LOGE("Unable to open ums lunfile (%s)", strerror(errno));
         return -1;
     }
