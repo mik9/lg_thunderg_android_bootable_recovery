@@ -109,7 +109,8 @@ int nandroid_backup_partition(const char* backup_path, const char* root) {
     // see if we need a raw backup (mtd)
     char tmp[PATH_MAX];
     int ret;
-    if (strcmp(vol->fs_type, "mtd") == 0) {
+    if (strcmp(vol->fs_type, "mtd") == 0 ||
+            strcmp(vol->fs_type, "emmc") == 0) {
         const char* name = basename(root);
         sprintf(tmp, "%s/%s.img", backup_path, name);
         ui_print("Backing up %s image...\n", name);
@@ -198,7 +199,7 @@ int nandroid_backup(const char* backup_path)
     {
         if (0 != ensure_path_mounted("/sd-ext"))
             ui_print("Could not mount sd-ext. sd-ext backup may not be supported on this device. Skipping backup of sd-ext.\n");
-        else if (0 != (ret = nandroid_backup_partition(backup_path, "SDEXT:")))
+        else if (0 != (ret = nandroid_backup_partition(backup_path, "/sd-ext")))
             return ret;
     }
 
@@ -280,7 +281,8 @@ int nandroid_restore_partition(const char* backup_path, const char* root) {
 
     // see if we need a raw restore (mtd)
     char tmp[PATH_MAX];
-    if (strcmp(vol->fs_type, "mtd") == 0) {
+    if (strcmp(vol->fs_type, "mtd") == 0 ||
+            strcmp(vol->fs_type, "emmc") == 0) {
         int ret;
         const char* name = basename(root);
         ui_print("Erasing %s before restore...\n", name);
