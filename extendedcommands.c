@@ -340,12 +340,15 @@ void show_nandroid_restore_menu()
         nandroid_restore(file, 1, 1, 1, 1, 1, 0);
 }
 
+#ifndef BOARD_UMS_LUNFILE
+#define BOARD_UMS_LUNFILE	"/sys/devices/platform/usb_mass_storage/lun0/file"
+#endif
+
 void show_mount_usb_storage_menu()
 {
     int fd;
     Volume *vol = volume_for_path("/sdcard");
-    if ((fd = open("/sys/devices/platform/msm_hsusb/gadget/lun0/file",
-                   O_WRONLY)) < 0) {
+    if ((fd = open(BOARD_UMS_LUNFILE, O_WRONLY)) < 0) {
         LOGE("Unable to open ums lunfile (%s)", strerror(errno));
         return -1;
     }
@@ -372,7 +375,11 @@ void show_mount_usb_storage_menu()
             break;
     }
 
+<<<<<<< HEAD
     if ((fd = open("/sys/devices/platform/msm_hsusb/gadget/lun0/file", O_WRONLY)) < 0) {
+=======
+    if ((fd = open(BOARD_UMS_LUNFILE, O_WRONLY)) < 0) {
+>>>>>>> fa265db3a3e4280e3228c3a3828701ee6e467930
         LOGE("Unable to open ums lunfile (%s)", strerror(errno));
         return -1;
     }
@@ -975,7 +982,8 @@ void write_fstab_root(char *path, FILE *file)
 
     fprintf(file, "%s ", device);
     fprintf(file, "%s ", path);
-    fprintf(file, "%s rw\n", vol->fs_type2 != NULL ? "auto" : vol->fs_type);
+    // special case rfs cause auto will mount it as vfat on samsung.
+    fprintf(file, "%s rw\n", vol->fs_type2 != NULL && strcmp(vol->fs_type, "rfs") != 0 ? "auto" : vol->fs_type);
 }
 
 void create_fstab()
@@ -1027,6 +1035,9 @@ int bml_check_volume(const char *path) {
 void process_volumes() {
     create_fstab();
     
+    return;
+
+    // dead code.
     if (device_flash_type() != BML)
         return;
 
