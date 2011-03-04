@@ -375,11 +375,7 @@ void show_mount_usb_storage_menu()
             break;
     }
 
-<<<<<<< HEAD
-    if ((fd = open("/sys/devices/platform/msm_hsusb/gadget/lun0/file", O_WRONLY)) < 0) {
-=======
     if ((fd = open(BOARD_UMS_LUNFILE, O_WRONLY)) < 0) {
->>>>>>> fa265db3a3e4280e3228c3a3828701ee6e467930
         LOGE("Unable to open ums lunfile (%s)", strerror(errno));
         return -1;
     }
